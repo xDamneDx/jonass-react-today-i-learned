@@ -1,1 +1,3 @@
-# jonass-react-today-i-learned
+# Today I Learned
+
+Project from Jonas Schmedtmann course.
