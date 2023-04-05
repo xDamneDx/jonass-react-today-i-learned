@@ -1,3 +1,4 @@
+import { useState } from "react";
 import logo from "./assets/logo.png";
 
 const CATEGORIES = [
@@ -46,6 +47,8 @@ const initialFacts = [
 ];
 
 export default function App() {
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <>
       {/* HEADER */}
@@ -55,10 +58,15 @@ export default function App() {
           <h1>Today I Learned</h1>
         </div>
 
-        <button className="btn btn-large btn-open">Share a fact</button>
+        <button
+          className="btn btn-large btn-open"
+          onClick={() => setShowForm((prev) => !prev)}
+        >
+          Share a fact
+        </button>
       </header>
 
-      <NewFactForm />
+      {showForm && <NewFactForm />}
 
       <main className="main">
         <CategoryFilter />
