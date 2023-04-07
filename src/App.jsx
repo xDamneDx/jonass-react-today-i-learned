@@ -16,13 +16,21 @@ const CATEGORIES = [
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState("all");
   const [facts, setFacts] = useState([]);
 
   useEffect(() => {
     const getFacts = async () => {
       setIsLoading(true);
-      const { data, error } = await supabase.from("facts").select("*");
 
+      let query = supabase.from("facts").select("*");
+
+      if (currentCategory !== "all") {
+        query = query.eq("category", currentCategory);
+      }
+
+      const { data, error } = await query.limit(100);
+      
       if (error) {
         alert("There was a problem getting data");
       } else {
@@ -33,7 +41,7 @@ export default function App() {
     };
 
     getFacts();
-  }, []);
+  }, [currentCategory]);
 
   return (
     <>
@@ -44,7 +52,7 @@ export default function App() {
       )}
 
       <main className="main">
-        <CategoryFilter />
+        <CategoryFilter setCurrentCategory={setCurrentCategory} />
         {isLoading ? <Loader /> : <FactList facts={facts} />}
       </main>
     </>
@@ -147,18 +155,24 @@ function NewFactForm({ setFacts, setShowForm }) {
   );
 }
 
-function CategoryFilter() {
+function CategoryFilter({ setCurrentCategory }) {
   return (
     <aside>
       <ul>
         <li className="category">
-          <button className="btn btn-all-categories">All</button>
+          <button
+            className="btn btn-all-categories"
+            onClick={() => setCurrentCategory("all")}
+          >
+            All
+          </button>
         </li>
         {CATEGORIES.map((category) => (
           <li key={category.name} className="category">
             <button
               className="btn btn-category"
               style={{ backgroundColor: category.color }}
+              onClick={() => setCurrentCategory(category.name)}
             >
               {category.name}
             </button>
