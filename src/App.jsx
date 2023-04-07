@@ -14,14 +14,17 @@ const CATEGORIES = [
 ];
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [facts, setFacts] = useState([]);
 
   useEffect(() => {
     const getFacts = async () => {
+      setIsLoading(true);
       const { data, error } = await supabase.from("facts").select("*");
 
       setFacts(data);
+      setIsLoading(false);
     };
 
     getFacts();
@@ -37,10 +40,14 @@ export default function App() {
 
       <main className="main">
         <CategoryFilter />
-        <FactList facts={facts} />
+        {isLoading ? <Loader /> : <FactList facts={facts} />}
       </main>
     </>
   );
+}
+
+function Loader() {
+  return <p className="message">Loading...</p>;
 }
 
 function Header({ showForm, setShowForm }) {
