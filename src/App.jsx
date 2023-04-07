@@ -23,7 +23,12 @@ export default function App() {
       setIsLoading(true);
       const { data, error } = await supabase.from("facts").select("*");
 
-      setFacts(data);
+      if (error) {
+        alert("There was a problem getting data");
+      } else {
+        setFacts(data);
+      }
+
       setIsLoading(false);
     };
 
