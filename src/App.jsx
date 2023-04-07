@@ -30,7 +30,7 @@ export default function App() {
       }
 
       const { data, error } = await query.limit(100);
-      
+
       if (error) {
         alert("There was a problem getting data");
       } else {
@@ -184,6 +184,14 @@ function CategoryFilter({ setCurrentCategory }) {
 }
 
 function FactList({ facts }) {
+  if (facts.length === 0) {
+    return (
+      <p className="message">
+        No facts for this category yet! Create the first one.
+      </p>
+    );
+  }
+
   return (
     <section>
       <ul className="facts-list">
@@ -191,6 +199,7 @@ function FactList({ facts }) {
           <Fact fact={fact} key={fact.id} />
         ))}
       </ul>
+      <p>There are {facts.length} facts in the database. Add your own!</p>
     </section>
   );
 }
